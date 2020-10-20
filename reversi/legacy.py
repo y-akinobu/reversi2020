@@ -3,6 +3,8 @@
 # オセロ（リバーシ） 6x6
 #
 
+import random
+
 N = 6  # 大きさ
 
 EMPTY = 0  # 空
@@ -114,7 +116,7 @@ def game(player1, player2):
 	on_gaming = True  # 　ゲームが続行できるか？
 	while on_gaming:
 		on_gaming = False  # 　いったん、ゲーム終了にする
-		if can_play(board, BLACK):
+		if can_play(board, BLACK):  # memo: can_play 関数 => まだ石が置けるかどうかをTF で返す
 			# player1 に黒を置かせる
 			position = player1(board[:], BLACK)
 			show_board(board)
@@ -134,4 +136,19 @@ def ochibi(board, color): #おチビAI
       return position
   return 0
 
-game(ochibi, ochibi)
+def rand_list(n):
+  # n : マス目の数
+  setRand = []
+  while len(setRand) < n:
+    tmp = random.randint(0, n-1)
+    if not tmp in setRand:
+      setRand.append(tmp)
+  return setRand
+
+def randAI(board, color): #randomAI
+  for position in rand_list(N*N):  # rand_list 関数で事前に0-35までのランダム値のリストを与えておく
+    if put_and_reverse(board, position, color):
+      return position
+  return 0
+
+game(ochibi, randAI)
